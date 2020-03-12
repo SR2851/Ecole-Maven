@@ -2,6 +2,7 @@ package Service;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import DAO.IEtudiantDAO;
@@ -9,6 +10,7 @@ import Model.Etudiant;
 @Service
 public class EtudiantService implements IEtudiantService {
 	
+	@Autowired
 	private IEtudiantDAO daoE;
 
 	public int addEtudiant(Etudiant etudiant) {
@@ -21,10 +23,7 @@ public class EtudiantService implements IEtudiantService {
 		return daoE.getEtudiants();
 	}
 
-	public String updateEtudiant(Etudiant etudiant) {
-		// TODO Auto-generated method stub
-		return daoE.updateEtudiant(etudiant);
-	}
+	
 
 	public String deleteEtudiant(Etudiant etudiant) {
 		// TODO Auto-generated method stub

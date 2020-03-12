@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 
@@ -33,8 +34,9 @@ try {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			System.out.println("erreur ajout");
+			return 0;
 		}
-return 0;
+
 	}
 
 
@@ -54,24 +56,6 @@ return 0;
 	}
 	}
 
-	public String updateEtudiant(Etudiant etudiant) {
-try {
-			
-			Session session= ConnectionDB.getInstance().getFactory().openSession();
-			session.beginTransaction();
-			Query query = session.createQuery("update Etudiant set nomEtudiant= :nomEtudiant where idEtudiant= :idEtudiant ");
-			query.setParameter("nomEtudiant", etudiant.getNomEtudiant());
-			query.setParameter("idEtudiant", etudiant.getIdEtudiant());
-			session.getTransaction().commit();
-			System.out.println("etudiant mis à jour");
-			
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			System.out.println("erreur mise à jour");
-		}
-		return null;
-	}
 
 
 	public Etudiant infoEtudiant(Etudiant etudiant) {
@@ -93,15 +77,15 @@ try {
 			
 			Session session= ConnectionDB.getInstance().getFactory().openSession();
 			session.beginTransaction();
-			Query query = session.createQuery("delete from Etudiant where idEtudiant= :idEtudiant ");
-			query.setParameter("idEtudiant", etudiant.getIdEtudiant());
+			session.delete(etudiant);
 			session.getTransaction().commit();
 			System.out.println("etudiant supprimé");
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			System.out.println("erreur suppression");
+			 System.out.println("erreur suppression");
+			
 		}
 		return null;
 	}

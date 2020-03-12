@@ -2,8 +2,13 @@ package Model;
 
 import java.io.Serializable;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+@Entity
 public class Etudiant implements Serializable{
-	
+	@Id
+	@GeneratedValue
 private int idEtudiant;
 private String nomEtudiant;
 private String prenomEtudiant;
@@ -20,9 +25,8 @@ public Etudiant() {
 
 
 
-public Etudiant(int idEtudiant, String nomEtudiant, String prenomEtudiant, String groupe) {
+public Etudiant(String nomEtudiant, String prenomEtudiant, String groupe) {
 	super();
-	this.idEtudiant = idEtudiant;
 	this.nomEtudiant = nomEtudiant;
 	this.prenomEtudiant = prenomEtudiant;
 	this.groupe = groupe;
