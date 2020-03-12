@@ -8,28 +8,19 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.HibernateException;
+import org.hibernate.Query;
 import org.hibernate.Session;
+import org.springframework.stereotype.Repository;
 
 import Model.Etudiant;
 
 
+
+@Repository
 public class EtudiantDAO implements IEtudiantDAO {
-	private Connection connexion() {
-		String url = "jdbc:mysql://localhost:3306/ProduitSpring";
-		String utilisateur = "root";
-		String motDePasse = "";
-
-		try {
-			Connection con = DriverManager.getConnection(url, utilisateur, motDePasse);
-			return con;
-
-		} catch (SQLException e) {
-			
-			e.printStackTrace();
-			return null;
-		}
-	}
-	public String addEtudiant(Etudiant etudiant) {
+	
+	public int addEtudiant(Etudiant etudiant) {
 try {
 			
 			Session session= ConnectionDB.getInstance().getFactory().openSession();
@@ -37,48 +28,81 @@ try {
 			session.saveOrUpdate(etudiant);
 			session.getTransaction().commit();
 			System.out.println("etudiant ajouté");
-			
+			return 1;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			System.out.println("erreur ajout");
 		}
-return null;
+return 0;
 	}
 
 
 	public List<Etudiant> getEtudiants() {
+		List<Etudiant> listep= new ArrayList<Etudiant>();
 		try {
-			Connection con= connexion();
-			String sql="select*from Produit";
-			PreparedStatement pre=con.prepareStatement(sql);
-			ResultSet rs=pre.executeQuery();
-			List<Etudiant> liste=new ArrayList<Etudiant>();
-			while(rs.next()) {
-				liste.add(new Etudiant(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getString(4)));
-				
-			}
-			return liste;
-		} catch (SQLException e) {
 			
+			Session session= ConnectionDB.getInstance().getFactory().openSession();
+			session.beginTransaction();
+			listep = session.createQuery("from Etudiant").list();
+		    return listep;
+			
+		} catch (HibernateException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
-			System.out.println("erreur dans la methode getEtudiants() de la classe EtudiantDAO");
-		return null;
+			return null;
 	}
 	}
 
-	public String updateEtudiant(int idEtudiant, String nomEtudiant, String prenomEtudiant, String groupe) {
-		// TODO Auto-generated method stub
+	public String updateEtudiant(Etudiant etudiant) {
+try {
+			
+			Session session= ConnectionDB.getInstance().getFactory().openSession();
+			session.beginTransaction();
+			Query query = session.createQuery("update Etudiant set nomEtudiant= :nomEtudiant where idEtudiant= :idEtudiant ");
+			query.setParameter("nomEtudiant", etudiant.getNomEtudiant());
+			query.setParameter("idEtudiant", etudiant.getIdEtudiant());
+			session.getTransaction().commit();
+			System.out.println("etudiant mis à jour");
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println("erreur mise à jour");
+		}
 		return null;
 	}
 
-	public String deleteEtudiant(int idEtudiant) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
-	public String infoEtudiant(int idEtudiant) {
-		// TODO Auto-generated method stub
+	public Etudiant infoEtudiant(Etudiant etudiant) {
+		try {
+			Session session =  ConnectionDB.getInstance().getFactory().openSession();
+			session.beginTransaction();
+			Query query = session.createQuery("from Etudiant where idEtudiant= :idEtudiant");
+			query.setParameter("idEtudiant", etudiant.getIdEtudiant());
+			Etudiant etu=(Etudiant)query.uniqueResult();
+			return etu;
+		} catch (HibernateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+	}
+	public String deleteEtudiant(Etudiant etudiant) {
+try {
+			
+			Session session= ConnectionDB.getInstance().getFactory().openSession();
+			session.beginTransaction();
+			Query query = session.createQuery("delete from Etudiant where idEtudiant= :idEtudiant ");
+			query.setParameter("idEtudiant", etudiant.getIdEtudiant());
+			session.getTransaction().commit();
+			System.out.println("etudiant supprimé");
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println("erreur suppression");
+		}
 		return null;
 	}
 
